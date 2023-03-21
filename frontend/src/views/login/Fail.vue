@@ -6,15 +6,7 @@
   
 <script setup lang="ts">
     import { useI18n } from "vue-i18n";
+    import locale from "@/locales/login";
 
-    const { t } = useI18n({ messages: {
-        "en": {
-            "failed": "Login failed",
-            "back to login": "Back to login"
-        },
-        "it": {
-            "failed": "Accesso fallito",
-            "back to login": "Ritorna al login"
-        }
-    } });
+    const { t } = useI18n({ messages: locale });
 </script>

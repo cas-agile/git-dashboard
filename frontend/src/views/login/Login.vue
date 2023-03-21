@@ -6,18 +6,15 @@
         <GitlabSSOButton />
     </div>
 
+    <LocaleSwitch />
+
 </template>
   
 <script setup lang="ts">
     import GitlabSSOButton from "@/components/GitlabSSOButton.vue";
     import { useI18n } from "vue-i18n";
+    import locale from "@/locales/login";
+    import LocaleSwitch from "@/components/LocaleSwitch.vue";
 
-    const { t } = useI18n({ messages: {
-        "en": {
-            "login": "Login to metrics"
-        },
-        "it": {
-            "login": "Accedi alle statistiche"
-        }
-    } });
+    const { t } = useI18n({ messages: locale });
 </script>

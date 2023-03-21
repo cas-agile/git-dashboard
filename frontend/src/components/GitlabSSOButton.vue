@@ -12,14 +12,8 @@
 
     import { useI18n } from "vue-i18n";
     import gitlab_icon from "@/assets/icons/gitlab.svg";
+    import locale from "@/locales/login";
 
-    const { t } = useI18n({ messages: {
-        "en": {
-            "gitlab login": "Sign in with Gitlab"
-        },
-        "it": {
-            "gitlab login": "Accedi con Gitlab"
-        }
-    } });
+    const { t } = useI18n({ messages: locale });
 
 </script>
