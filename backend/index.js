@@ -4,7 +4,9 @@ const app = express();
 const path = require("path");
 const passport = require("passport");
 const session = require("express-session");
-const gitlab_router = require("./routes/gitlab");
+
+const gitlab_sso_router = require("./routes/gitlab_sso");
+const git_router = require("./routes/git");
 
 
 app.use(session({ 
@@ -15,7 +17,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/api", gitlab_router);
+app.use("/api", gitlab_sso_router);
+app.use("/api", git_router);
 
 app.use("/", express.static(path.join(__dirname, "../frontend/dist")));
 app.use("/*", (req, res) => { res.sendFile(path.join(__dirname, "../frontend/dist/index.html")) });
