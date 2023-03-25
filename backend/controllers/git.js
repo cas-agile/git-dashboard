@@ -1,5 +1,6 @@
 require("dotenv").config();
 const { gitlabAPI } = require("../utilities/gitlabAPI");
+const { runGitinspector } = require("../utilities/gitinspector");
 
 async function listRepositories(req, res) {
     try {
@@ -27,6 +28,17 @@ async function listRepositories(req, res) {
 }
 
 
+async function gitinspectorOnRepoId(req, res) {
+    try {
+        res.status(200).send(await runGitinspector(req, req.params.repo_id));
+    }
+    catch (err) {
+        res.sendStatus(500);
+    }
+}
+
+
 module.exports = {
-    listRepositories
+    listRepositories,
+    gitinspectorOnRepoId
 }

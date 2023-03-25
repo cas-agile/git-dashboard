@@ -12,4 +12,13 @@ const controller = require("../controllers/git");
 router.get("/git/repositories/", middleware.listRepositories, controller.listRepositories);
 
 
+/**
+ * Gets gitinspector results on a repo
+ * Param
+ *  repo_id : integer   Id of the repository to analyze
+ */
+router.get("/stats/gitinspector/:repo_id", controller.gitinspectorOnRepoId);
+
+
+
 module.exports = router;

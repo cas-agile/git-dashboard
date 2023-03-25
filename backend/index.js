@@ -4,6 +4,7 @@ const app = express();
 const path = require("path");
 const passport = require("passport");
 const session = require("express-session");
+var fs = require("fs");
 
 const gitlab_sso_router = require("./routes/gitlab_sso");
 const git_router = require("./routes/git");
@@ -24,7 +25,8 @@ app.use("/", express.static(path.join(__dirname, "../frontend/dist")));
 app.use("/*", (req, res) => { res.sendFile(path.join(__dirname, "../frontend/dist/index.html")) });
 
 
+if (!fs.existsSync(process.env.TMP_DIR)){ fs.mkdirSync(process.env.TMP_DIR); }
 
 app.listen(process.env.PORT, () => {
-    console.log(`Listening at ${process.env.PUBLIC_URL}`)
-})
+    console.log(`Listening at ${process.env.PUBLIC_URL}`);
+});

@@ -10,6 +10,12 @@ function gitlabAPI(req, method, endpoint, args={}) {
     return axios(args);
 }
 
+async function getProjectById(req, id) {
+    return ( await gitlabAPI(req, "get", `/api/v4/projects/${id}`) ).data;
+}
+
+
 module.exports = {
-    gitlabAPI
+    gitlabAPI,
+    getProjectById
 }
