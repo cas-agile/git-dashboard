@@ -5,9 +5,8 @@ import router from "./routes/router"
 import { createI18n } from "vue-i18n";
 import { getLocale } from "@/utilities/locale_handler"
 
-const app = createApp(App);
 
-console.log(getLocale());
+const app = createApp(App);
 
 app.use(router);
 app.use(createI18n({

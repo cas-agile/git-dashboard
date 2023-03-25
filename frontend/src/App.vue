@@ -8,4 +8,7 @@
 
 <script setup lang="ts">
     import { RouterView } from "vue-router";
+    import { applyTheme, getTheme } from "@/utilities/theme_handler";
+
+    applyTheme(getTheme());
 </script>
