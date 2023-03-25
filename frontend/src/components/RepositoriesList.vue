@@ -1,6 +1,6 @@
 <template>
     <div v-for="repo in repositories">
-        <button :key="repo.id" class="border rounded w-full mb-2">
+        <button :key="repo.id" class="border rounded w-full mb-2" :onclick="() => props.onRepoSelected(repo.id)">
             <div class="py-3 px-1 text-left">
                 <p class="truncate font-bold">{{ repo.name }}</p>
                 <p class="truncate text-sm font-mono">{{ repo.path_with_namespace }}</p>
@@ -16,9 +16,10 @@
 
     const repositories = ref([] as GitlabRepository[]);
 
+    const props = defineProps([ "onRepoSelected" ]);
+
     onMounted(async () => {
         repositories.value = await listRepositories();
-        console.log(repositories.value);
     })
 
 </script>
