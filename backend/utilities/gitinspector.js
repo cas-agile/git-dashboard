@@ -73,7 +73,8 @@ async function getGitinspector(req, repo_id, branch="main") {
         branch: branch, 
         last_commit: commit_hash 
     });
-
+    
+    await fs.rm(repo_path, { recursive: true, force: true });
     return gitinspector_result.gitinspector_scan;
 }
 
