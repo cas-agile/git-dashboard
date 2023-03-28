@@ -24,6 +24,7 @@
     "express-session": "^1.17.3",
     "flowbite": "^1.6.4",
     "gitinspector": "^0.5.0-dev-2",
+    "mongoose": "^7.0.3",
     "passport": "^0.6.0",
     "passport-gitlab2": "^5.0.0",
     "uuid": "^9.0.0",

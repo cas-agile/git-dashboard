@@ -9,6 +9,10 @@
         </div>
     </div>
 
+    <div v-if="loading" class="w-screen min-h-screen absolute top-0 left-0 flex justify-center items-center bg-stone-600/50">
+        <Spinner />
+    </div>
+
 </template>
   
 
@@ -16,12 +20,28 @@
 
     import { ref } from "vue";
     import RepositoriesList from "@/components/RepositoriesList.vue";
-    import { getGitinspectorHTML } from "@/utilities/api/gitinspector";
+    import Spinner from "@/components/Spinner.vue";
+    import { getGitinspectorScan, startGitinspectorScan } from "@/utilities/api/gitinspector";
 
     const gitinspector = ref("");
+    const loading = ref(false);
 
     async function repoSelected(repo_id :number) {
-        gitinspector.value = await getGitinspectorHTML(repo_id);
+        loading.value = true;
+
+        await startGitinspectorScan(repo_id, "main");
+
+        for (let i=0; i<60; i++) {
+            try {
+                gitinspector.value = await getGitinspectorScan(repo_id, "main");
+                break;
+            }
+            catch (err) {
+                await new Promise(r => setTimeout(r, 1000));
+            } 
+        }
+
+        loading.value = false;
     }
 
 </script>

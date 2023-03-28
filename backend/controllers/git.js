@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { gitlabAPI } = require("../utilities/gitlabAPI");
-const { runGitinspector } = require("../utilities/gitinspector");
+const { runGitinspector, getGitinspector } = require("../utilities/gitinspector");
 
 async function listRepositories(req, res) {
     try {
@@ -10,7 +10,7 @@ async function listRepositories(req, res) {
             }
         }) ).data;
 
-        res.status(200).json(
+        return res.status(200).json(
             repositories.map((repo) => (
                 {
                     id: repo.id,
@@ -23,22 +23,38 @@ async function listRepositories(req, res) {
         );
     }
     catch (err) {
-        res.sendStatus(500);
+        return res.sendStatus(500);
     }
 }
 
 
-async function gitinspectorOnRepoId(req, res) {
+async function startGitinspectorOnRepo(req, res) {
     try {
-        res.status(200).send(await runGitinspector(req, req.params.repo_id));
+        runGitinspector(req, req.params.repo_id, req.params.branch);
+        return res.sendStatus(202);
     }
     catch (err) {
-        res.sendStatus(500);
+        console.error(err);
+        return res.sendStatus(500);
+    }
+}
+
+async function getGitinspectorOnRepo(req, res) {
+    try {
+        const gitinspector = await getGitinspector(req, req.params.repo_id, req.params.branch);
+        
+        if (!gitinspector) { return res.sendStatus(404); }
+        return res.status(200).send(gitinspector);
+    }
+    catch (err) {
+        console.error(err);
+        return res.sendStatus(500);
     }
 }
 
 
 module.exports = {
     listRepositories,
-    gitinspectorOnRepoId
+    startGitinspectorOnRepo,
+    getGitinspectorOnRepo
 }
