@@ -9,6 +9,7 @@ const mongoose = require("mongoose");
 
 const gitlab_sso_router = require("./routes/gitlab_sso");
 const git_router = require("./routes/git");
+const gitinspector_router = require("./routes/gitinspector");
 
 
 app.use(session({ 
@@ -21,6 +22,7 @@ app.use(passport.session());
 
 app.use("/api", gitlab_sso_router);
 app.use("/api", git_router);
+app.use("/api", gitinspector_router);
 
 app.use("/", express.static(path.join(__dirname, "../frontend/dist")));
 app.use("/*", (req, res) => { res.sendFile(path.join(__dirname, "../frontend/dist/index.html")) });
