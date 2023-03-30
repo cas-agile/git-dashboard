@@ -8,6 +8,11 @@ export interface GitlabRepository {
     avatar_url: string | null
 }
 
+export interface GitlabBranch {
+    name: string,
+}
+
+
 export async function listRepositories(page_number:number=1) : Promise<GitlabRepository[]> {
     return ( await axios({
         method: "get",
@@ -15,5 +20,12 @@ export async function listRepositories(page_number:number=1) : Promise<GitlabRep
         params: {
             page_number: page_number
         }
+    }) ).data;
+}
+
+export async function listBranches(repo_id :number) : Promise<GitlabBranch[]> {
+    return ( await axios({
+        method: "get",
+        url: `/api/git/repositories/${encodeURIComponent(repo_id)}/branches`,
     }) ).data;
 }

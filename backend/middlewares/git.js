@@ -7,7 +7,16 @@ function listRepositories(req, res, next) {
     next();
 }
 
+function validateRepoId(req, res, next) {
+    if (!req.params.repo_id) {
+        return res.status(400).json({ message: "Invalid repository id" });
+    }
+
+    next();
+}
+
 
 module.exports = {
-    listRepositories
+    listRepositories,
+    validateRepoId
 }

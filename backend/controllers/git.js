@@ -23,11 +23,31 @@ async function listRepositories(req, res) {
         );
     }
     catch (err) {
+        console.error(err);
+        return res.sendStatus(500);
+    }
+}
+
+async function listBranches(req, res) {
+    try {
+        const branches = ( await gitlabAPI(req, "get", `/api/v4/projects/${req.params.repo_id}/repository/branches`) ).data;
+
+        return res.status(200).json(
+            branches.map((branch) => (
+                {
+                    name: branch.name
+                }
+            ))
+        );
+    }
+    catch (err) {
+        console.error(err);
         return res.sendStatus(500);
     }
 }
 
 
 module.exports = {
-    listRepositories
+    listRepositories,
+    listBranches
 }
