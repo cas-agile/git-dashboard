@@ -1,5 +1,7 @@
 require("dotenv").config();
-const { gitlabAPI } = require("../utilities/gitlabAPI");
+const { gitlabAPI, cloneRepository } = require("../utilities/gitlabAPI");
+const getDirectoryExtensions = require("../utilities/list-extensions").listExtensions;
+const fs = require("fs").promises;
 
 
 async function listRepositories(req, res) {
@@ -46,8 +48,23 @@ async function listBranches(req, res) {
     }
 }
 
+async function listExtensions(req, res) {
+    try {
+        const repo_path = await cloneRepository(req, req.params.repo_id, req.params.branch);
+        const extensions = await getDirectoryExtensions(repo_path);
+        await fs.rm(repo_path, { recursive: true, force: true });
+
+        return res.status(200).json(extensions);
+    }
+    catch (err) {
+        console.error(err);
+        return res.sendStatus(500);
+    }
+}
+
 
 module.exports = {
     listRepositories,
-    listBranches
+    listBranches,
+    listExtensions
 }

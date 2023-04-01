@@ -8,6 +8,8 @@ const controller = require("../controllers/gitinspector");
  * Params:
  *  repo_id : integer   Id of the repository to analyze
  *  branch : string     Branch of the repository to analyze
+ * Query:
+ *  extensions : string[]     Extentions to scan
  */
 router.get("/stats/gitinspector/:repo_id/:branch", controller.getGitinspectorOnRepo);
 
@@ -16,6 +18,8 @@ router.get("/stats/gitinspector/:repo_id/:branch", controller.getGitinspectorOnR
  * Params:
  *  repo_id : integer   Id of the repository to analyze
  *  branch : string     Branch of the repository to analyze
+ * Body:
+ *  extensions : string[]     Extentions to scan
  */
 router.post("/stats/gitinspector/:repo_id/:branch", controller.startGitinspectorOnRepo);
 

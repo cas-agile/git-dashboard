@@ -11,6 +11,7 @@ const gitlab_sso_router = require("./routes/gitlab_sso");
 const git_router = require("./routes/git");
 const gitinspector_router = require("./routes/gitinspector");
 
+app.use(express.json());
 
 app.use(session({ 
     resave: false,

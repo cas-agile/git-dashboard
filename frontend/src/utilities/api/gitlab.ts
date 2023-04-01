@@ -29,3 +29,10 @@ export async function listBranches(repo_id :number) : Promise<GitlabBranch[]> {
         url: `/api/git/repositories/${encodeURIComponent(repo_id)}/branches`,
     }) ).data;
 }
+
+export async function listExtensions(repo_id :number, branch :string) : Promise<string[]> {
+    return ( await axios({
+        method: "get",
+        url: `/api/git/repositories/${encodeURIComponent(repo_id)}/${encodeURIComponent(branch)}/extensions/`,
+    }) ).data;
+}
