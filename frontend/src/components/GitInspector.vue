@@ -2,16 +2,16 @@
 
     <div class="flex flex-col h-full" v-if="selected_repo_id">
         <div class="mb-2">
-            <div class="flex items-center h-full [&>*]:mr-2">
+            <div class="flex items-end h-full [&>*]:mr-2">
                 <div class="w-fit">
                     <BranchesList :repo_id="selected_repo_id" :onBranchSelected="branchSelected" />
                 </div>
                 <div class="w-fit">
-                    <ExtensionsList :repo_id="selected_repo_id" :branch="selected_branch" :onAdd="extensionSelected" :onRemove="extensionUnselected" :disabled="!selected_branch" />
+                    <ExtensionsList :repo_id="selected_repo_id" :branch="selected_branch" :onchange="extensionsSelected" :disabled="!selected_branch" />
                 </div>
 
                 <div class="h-full">
-                    <button :onclick="gitinspectorScan" :disabled="!selected_repo_id || !selected_branch || selected_extensions.size === 0 || loading" type="button" 
+                    <button :onclick="gitinspectorScan" :disabled="!selected_repo_id || !selected_branch || selected_extensions.length === 0 || loading" type="button" 
                             class="font-medium rounded-lg px-5 py-2.5 h-full
                                     text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 
                                     dark:bg-blue-600 dark:disabled:bg-gray-500 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 
@@ -47,28 +47,25 @@
 
     const selected_repo_id :Ref<number|undefined> = ref(props.repo_id);
     const selected_branch = ref("");
-    const selected_extensions = ref(new Set<string>());
+    const selected_extensions = ref([] as string[]);
     const gitinspector = ref("");
     const loading = ref(false);
 
 
     watch(() => props.repo_id, async (new_repo_id) => {
+        // Resets values
         selected_repo_id.value = new_repo_id;
         selected_branch.value = "";
         gitinspector.value = "";
-        selected_extensions.value = new Set();
+        selected_extensions.value = [];
     });
 
     function branchSelected(branch :string) {
         selected_branch.value = branch;
     }
 
-    function extensionSelected(extension :string) {
-        selected_extensions.value.add(extension);
-    }
-
-    function extensionUnselected(extension :string) {
-        selected_extensions.value.delete(extension);
+    function extensionsSelected(extensions :string[]) {
+        selected_extensions.value = extensions;
     }
 
 
@@ -78,11 +75,11 @@
         const branch = selected_branch.value;
         loading.value = true;
 
-        await startGitinspectorScan(repo_id, branch, [...selected_extensions.value]);
+        await startGitinspectorScan(repo_id, branch, selected_extensions.value);
 
         for (let i=0; i<60; i++) {
             try {
-                gitinspector.value = await getGitinspectorScan(repo_id, branch, [...selected_extensions.value]);
+                gitinspector.value = await getGitinspectorScan(repo_id, branch, selected_extensions.value);
                 break;
             }
             catch (err) {
