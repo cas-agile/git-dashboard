@@ -5,6 +5,8 @@ const gitinspectorSchema = mongoose.Schema({
     branch: { type: String, required: true },
     last_commit: { type: String, required: true },
     extensions: String,
+    since: String,
+    until: String,
 
     gitinspector_scan: { type: String, required: true }
 });
@@ -16,12 +18,14 @@ const gitinspectorSchema = mongoose.Schema({
  * @param {string} extensions 
  * @returns {Promise<boolean>} True if a scan for the given configuration is in cache. False otherwise
  */
-gitinspectorSchema.statics.hasScan = async function(repo_id, branch, last_commit, extensions) {
+gitinspectorSchema.statics.hasScan = async function(repo_id, branch, last_commit, extensions, since, until) {
     const gitinspector_result = await this.findOne({ 
         repo_id: repo_id, 
         branch: branch, 
         last_commit: last_commit,
-        extensions: extensions
+        extensions: extensions,
+        since: since, 
+        until: until
     });
 
     return gitinspector_result ? true : false;

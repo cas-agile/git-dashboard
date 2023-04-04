@@ -1,6 +1,7 @@
 const exec = require('util').promisify(require("child_process").exec);
 const fs = require("fs").promises;
 const { cloneRepository, getLastCommitHash } = require("../utilities/gitlabAPI");
+const { validateDate } = require("../validators/date");
 
 const GitinspectorModel = require("../models/gitinspector");
 
@@ -12,18 +13,22 @@ function parseExtensionParams(extensions) {
 
 /**
  * Start gitinspector on a repository and caches the result
- * @param {any} req         Request object
- * @param {number} repo_id  Id of the repository to scan
- * @param {string} branch   Branch of the repository to scan
+ * @param {any} req                 Request object
+ * @param {number} repo_id          Id of the repository to scan
+ * @param {string} branch           Branch of the repository to scan
  * @param {string[]} extensions     Extensions to scan
+ * @param {string} since            Starting date of the scan (format: YYYY-MM-DD HH:mm:ss)
+ * @param {string} until            Ending date of the scan (format: YYYY-MM-DD HH:mm:ss)
  */
-async function runGitinspector(req, repo_id, branch="main", extensions=[]) {
+async function runGitinspector(req, repo_id, branch="main", extensions=[], since="", until="") {
     const repo_path = await cloneRepository(req, repo_id, branch);
     const commit_hash = await getLastCommitHash(repo_path);
+    if (since && !validateDate(since)) { since = ""; }
+    if (until && !validateDate(until)) { until = ""; }
 
-    if (!(await GitinspectorModel.hasScan(repo_id, branch, commit_hash))) {
+    if (!(await GitinspectorModel.hasScan(repo_id, branch, commit_hash, since, until))) {
         // TODO Replace directory uuid to real repo name
-        const gitinspector = ( await exec(`npx gitinspector --format=html --timeline --responsibilities --metrics --weeks --list-file-types --file-types ${parseExtensionParams(extensions)}`, 
+        const gitinspector = ( await exec(`npx gitinspector --format=html --timeline --responsibilities --metrics --weeks --list-file-types --file-types "${parseExtensionParams(extensions)}" ${since ? '--since="'+since+'"' : ""}  ${until ? '--until="'+until+'"' : ""}`, 
                                 { cwd: repo_path }) ).stdout;
     
         // Caches results
@@ -32,7 +37,9 @@ async function runGitinspector(req, repo_id, branch="main", extensions=[]) {
             branch: branch,
             last_commit: commit_hash,
             extensions: parseExtensionParams(extensions),
-            gitinspector_scan: gitinspector
+            gitinspector_scan: gitinspector,
+            since: since,
+            until: until
         }).save();
     }
 
@@ -46,9 +53,11 @@ async function runGitinspector(req, repo_id, branch="main", extensions=[]) {
  * @param {number} repo_id          Id of the repository of which gitinspector is required
  * @param {string} branch           Branch of the repository
  * @param {string[]} extensions     Extensions to scan
+ * @param {string} since            Starting date of the scan (format: format: YYYY-MM-DD HH:mm:ss)
+ * @param {string} until            Ending date of the scan (format: format: YYYY-MM-DD HH:mm:ss)
  * @returns {Promise<string|null>} Gitinspector scan if in cache. null otherwise
  */
-async function getGitinspector(req, repo_id, branch="main", extensions=[]) {
+async function getGitinspector(req, repo_id, branch="main", extensions=[], since="", until="") {
     const repo_path = await cloneRepository(req, repo_id, branch);
     const commit_hash = await getLastCommitHash(repo_path);
 
@@ -56,7 +65,9 @@ async function getGitinspector(req, repo_id, branch="main", extensions=[]) {
         repo_id: repo_id, 
         branch: branch, 
         last_commit: commit_hash,
-        extensions: parseExtensionParams(extensions)
+        extensions: parseExtensionParams(extensions),
+        since: since,
+        until: until
     });
     
     await fs.rm(repo_path, { recursive: true, force: true });
