@@ -17,6 +17,9 @@ async function getProjectById(req, id) {
     return ( await gitlabAPI(req, "get", `/api/v4/projects/${id}`) ).data;
 }
 
+async function getBranchListByProject(req, project_id) {
+    return ( await gitlabAPI(req, "get", `/api/v4/projects/${project_id}/repository/branches`) ).data
+}
 
 
 /**
@@ -51,6 +54,7 @@ async function getLastCommitHash(repo_path) {
 module.exports = {
     gitlabAPI,
     getProjectById,
+    getBranchListByProject,
     cloneRepository,
     getLastCommitHash
 }

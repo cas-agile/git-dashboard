@@ -1,6 +1,5 @@
 function validateDate(date) {
-    // TODO format: YYYY-MM-DD HH:mm:ss
-    return true;
+    return String(date).match(/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/);
 }
 
 

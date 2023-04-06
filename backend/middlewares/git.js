@@ -1,3 +1,5 @@
+const git_validator = require("../validators/git");
+
 function listRepositories(req, res, next) {
     if (req.query.page_number && parseInt(req.query.page_number) <= 0) {
         return res.status(400).json({ message: "Invalid page number" });
@@ -7,16 +9,20 @@ function listRepositories(req, res, next) {
     next();
 }
 
-function validateRepoId(req, res, next) {
-    if (!req.params.repo_id) {
-        return res.status(400).json({ message: "Invalid repository id" });
-    }
+async function listBranches(req, res, next) {
+    if ( !(await git_validator.doesProjectExists(req, req.params.repo_id)) ) { return res.status(400).json({ message: "The project does not exist" }); }
+    return next();
+}
 
-    next();
+async function listExtensions(req, res, next) {
+    if ( !(await git_validator.doesProjectExists(req, req.params.repo_id)) ) { return res.status(400).json({ message: "The project does not exist" }); }
+    if ( !(await git_validator.doesBranchExists(req, req.params.repo_id, req.params.branch)) ) { return res.status(400).json({ message: "The branch does not exist" }); }
+    return next();
 }
 
 
 module.exports = {
     listRepositories,
-    validateRepoId
+    listBranches,
+    listExtensions
 }

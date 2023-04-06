@@ -4,7 +4,7 @@ const { runGitinspector, getGitinspector } = require("../utilities/gitinspector"
 
 async function startGitinspectorOnRepo(req, res) {
     try {
-        runGitinspector(req, req.params.repo_id, req.params.branch, req.body.extensions, req.body.since, req.body.until);
+        runGitinspector(req, req.params.repo_id, req.params.branch, req.body.extensions, req.body.since, req.body.until).catch(err => console.error(err));
         return res.sendStatus(202);
     }
     catch (err) {

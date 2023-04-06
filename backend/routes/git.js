@@ -17,7 +17,7 @@ router.get("/git/repositories/", middleware.listRepositories, controller.listRep
  * Params
  *  repo_id : integer   Id of the repository
  */
-router.get("/git/repositories/:repo_id/branches/", middleware.validateRepoId, controller.listBranches);
+router.get("/git/repositories/:repo_id/branches/", middleware.listBranches, controller.listBranches);
 
 
 /**
@@ -26,7 +26,7 @@ router.get("/git/repositories/:repo_id/branches/", middleware.validateRepoId, co
  *  repo_id : integer   Id of the repository
  *  branch  : string    Branch of the repository
  */
-router.get("/git/repositories/:repo_id/:branch/extensions/", middleware.validateRepoId, controller.listExtensions);
+router.get("/git/repositories/:repo_id/:branch/extensions/", middleware.listExtensions, controller.listExtensions);
 
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const middleware = require("../middlewares/gitinspector");
 const controller = require("../controllers/gitinspector");
 
 
@@ -13,7 +14,7 @@ const controller = require("../controllers/gitinspector");
  *  since : string              Starting date of the scan (format: format: YYYY-MM-DD HH:mm:ss)
  *  until : string              Ending date of the scan (format: format: YYYY-MM-DD HH:mm:ss)
  */
-router.get("/stats/gitinspector/:repo_id/:branch", controller.getGitinspectorOnRepo);
+router.get("/stats/gitinspector/:repo_id/:branch", middleware.getGitinspectorOnRepo, controller.getGitinspectorOnRepo);
 
 /**
  * Starts gitinspector on a repo
@@ -25,7 +26,7 @@ router.get("/stats/gitinspector/:repo_id/:branch", controller.getGitinspectorOnR
  *  since : string              Starting date of the scan (format: format: YYYY-MM-DD HH:mm:ss)
  *  until : string              Ending date of the scan (format: format: YYYY-MM-DD HH:mm:ss)
  */
-router.post("/stats/gitinspector/:repo_id/:branch", controller.startGitinspectorOnRepo);
+router.post("/stats/gitinspector/:repo_id/:branch", middleware.startGitinspectorOnRepo, controller.startGitinspectorOnRepo);
 
 
 
