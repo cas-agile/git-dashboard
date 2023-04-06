@@ -8,7 +8,8 @@ const GitinspectorModel = require("../models/gitinspector");
 
 function parseExtensionParams(extensions) {
     if (extensions.length === 0) { return "**"; }
-    return extensions.join(",");
+    return extensions.join(",")
+                     .replace(/(["'$`\\])/g,'\\$1'); // Escaping
 }
 
 /**
@@ -28,7 +29,7 @@ async function runGitinspector(req, repo_id, branch="main", extensions=[], since
 
     if (!(await GitinspectorModel.hasScan(repo_id, branch, commit_hash, since, until))) {
         // TODO Replace directory uuid to real repo name
-        const gitinspector = ( await exec(`npx gitinspector --format=html --timeline --responsibilities --metrics --weeks --list-file-types --file-types "${parseExtensionParams(extensions)}" ${since ? '--since="'+since+'"' : ""}  ${until ? '--until="'+until+'"' : ""}`, 
+        const gitinspector = ( await exec(`npx gitinspector --format=html --timeline --responsibilities --metrics --weeks --list-file-types --file-types="${parseExtensionParams(extensions)}" ${since ? '--since="'+since+'"' : ""}  ${until ? '--until="'+until+'"' : ""}`, 
                                 { cwd: repo_path }) ).stdout;
     
         // Caches results
