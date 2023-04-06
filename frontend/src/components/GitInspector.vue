@@ -6,8 +6,13 @@
                 <div class="w-fit">
                     <BranchesList :repo_id="selected_repo_id" :onBranchSelected="branchSelected" />
                 </div>
+
                 <div class="w-fit">
                     <ExtensionsList :repo_id="selected_repo_id" :branch="selected_branch" :onchange="extensionsSelected" :disabled="!selected_branch" />
+                </div>
+
+                <div class="w-fit">
+                    <IntervalPicker :onchange="setTimeSelected" />
                 </div>
 
                 <div class="h-full">
@@ -38,6 +43,7 @@
     import Spinner from "@/components/Spinner.vue";
     import BranchesList from "@/components/BranchesList.vue";
     import ExtensionsList from "@/components/ExtensionsList.vue";
+    import IntervalPicker from "@/components/IntervalPicker.vue";
     import { getGitinspectorScan, startGitinspectorScan } from "@/utilities/api/gitinspector";
 
 
@@ -48,6 +54,8 @@
     const selected_repo_id :Ref<number|undefined> = ref(props.repo_id);
     const selected_branch = ref("");
     const selected_extensions = ref([] as string[]);
+    const selected_start_date = ref(null as string|null);
+    const selected_end_date = ref(null as string|null);
     const gitinspector = ref("");
     const loading = ref(false);
 
@@ -68,18 +76,26 @@
         selected_extensions.value = extensions;
     }
 
+    function setTimeSelected(start: string, end :string) {
+        selected_start_date.value = start;
+        selected_end_date.value = end;
+    }
+
 
     async function gitinspectorScan() {
         if (!selected_repo_id.value || !selected_branch.value) { return; }
         const repo_id = selected_repo_id.value;
         const branch = selected_branch.value;
+        const start_date = selected_start_date.value ? `${selected_start_date.value} 00:00:00` : null;
+        const end_date = selected_end_date.value ? `${selected_end_date.value} 23:59:59` : null;
+        
         loading.value = true;
 
-        await startGitinspectorScan(repo_id, branch, selected_extensions.value);
+        await startGitinspectorScan(repo_id, branch, selected_extensions.value, start_date, end_date);
 
         for (let i=0; i<60; i++) {
             try {
-                gitinspector.value = await getGitinspectorScan(repo_id, branch, selected_extensions.value);
+                gitinspector.value = await getGitinspectorScan(repo_id, branch, selected_extensions.value, start_date, end_date);
                 break;
             }
             catch (err) {
