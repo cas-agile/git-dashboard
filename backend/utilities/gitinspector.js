@@ -20,11 +20,11 @@ function parseExtensionParams(extensions) {
  * @param {string} since            Starting date of the scan (format: YYYY-MM-DD HH:mm:ss)
  * @param {string} until            Ending date of the scan (format: YYYY-MM-DD HH:mm:ss)
  */
-async function runGitinspector(req, repo_id, branch="main", extensions=[], since="", until="") {
+async function runGitinspector(req, repo_id, branch="main", extensions=[], since=null, until=null) {
     const repo_path = await cloneRepository(req, repo_id, branch);
     const commit_hash = await getLastCommitHash(repo_path);
-    if (since && !validateDate(since)) { since = ""; }
-    if (until && !validateDate(until)) { until = ""; }
+    if (since && !validateDate(since)) { since = null; }
+    if (until && !validateDate(until)) { until = null; }
 
     if (!(await GitinspectorModel.hasScan(repo_id, branch, commit_hash, since, until))) {
         // TODO Replace directory uuid to real repo name
@@ -57,7 +57,7 @@ async function runGitinspector(req, repo_id, branch="main", extensions=[], since
  * @param {string} until            Ending date of the scan (format: format: YYYY-MM-DD HH:mm:ss)
  * @returns {Promise<string|null>} Gitinspector scan if in cache. null otherwise
  */
-async function getGitinspector(req, repo_id, branch="main", extensions=[], since="", until="") {
+async function getGitinspector(req, repo_id, branch="main", extensions=[], since=null, until=null) {
     const repo_path = await cloneRepository(req, repo_id, branch);
     const commit_hash = await getLastCommitHash(repo_path);
 
