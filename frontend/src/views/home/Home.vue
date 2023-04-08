@@ -1,7 +1,7 @@
 <template>
 
     <div class="flex">
-        <div class="w-36">
+        <div class="w-56 h-screen">
             <RepositoriesList :onRepoSelected="repoSelected" />
         </div>
 

@@ -8,7 +8,8 @@ async function listRepositories(req, res) {
     try {
         const repositories = ( await gitlabAPI(req, "get", "/api/v4/projects", {
             params: {
-                page: req.query.page_number ?? 1
+                page: req.query.page_number ?? 1,
+                per_page: 50
             }
         }) ).data;
 
