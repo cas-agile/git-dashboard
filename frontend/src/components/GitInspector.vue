@@ -44,7 +44,7 @@
     import BranchesList from "@/components/BranchesList.vue";
     import ExtensionsList from "@/components/ExtensionsList.vue";
     import IntervalPicker from "@/components/IntervalPicker.vue";
-    import { getGitinspectorScan, startGitinspectorScan } from "@/utilities/api/gitinspector";
+    import { getGitinspectorScan, startGitinspectorScan, ScanError, ScanNotCompleted } from "@/utilities/api/gitinspector";
 
 
     const props = defineProps({
@@ -91,15 +91,21 @@
         
         loading.value = true;
 
-        await startGitinspectorScan(repo_id, branch, selected_extensions.value, start_date, end_date);
+        const scan_id = await startGitinspectorScan(repo_id, branch, selected_extensions.value, start_date, end_date);
 
         for (let i=0; i<60; i++) {
             try {
-                gitinspector.value = await getGitinspectorScan(repo_id, branch, selected_extensions.value, start_date, end_date);
+                gitinspector.value = await getGitinspectorScan(scan_id);
                 break;
             }
             catch (err) {
-                await new Promise(r => setTimeout(r, 1000));
+                if (err instanceof ScanNotCompleted) {
+                    await new Promise(r => setTimeout(r, 1000));
+                }
+                else {
+                    // TODO Add error handling
+                    break;
+                }
             } 
         }
 

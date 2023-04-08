@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const gitinspectorSchema = mongoose.Schema({
+    scan_id: { type: String, required: true, unique: true },
     repo_id: { type: Number, required: true },
     branch: { type: String, required: true },
     last_commit: { type: String, required: true },
@@ -12,20 +13,12 @@ const gitinspectorSchema = mongoose.Schema({
 });
 
 /**
- * @param {number} repo_id 
- * @param {string} branch 
- * @param {string} last_commit 
- * @param {string} extensions 
+ * @param {string} scan_id 
  * @returns {Promise<boolean>} True if a scan for the given configuration is in cache. False otherwise
  */
-gitinspectorSchema.statics.hasScan = async function(repo_id, branch, last_commit, extensions, since, until) {
+gitinspectorSchema.statics.hasScan = async function(scan_id) {
     const gitinspector_result = await this.findOne({ 
-        repo_id: repo_id, 
-        branch: branch, 
-        last_commit: last_commit,
-        extensions: extensions,
-        since: since, 
-        until: until
+        scan_id: scan_id
     });
 
     return gitinspector_result ? true : false;

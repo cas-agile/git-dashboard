@@ -1,8 +1,19 @@
 import axios from "axios";
 
+export class ScanNotCompleted extends Error {
+    constructor(message :string="") {
+        super(message);
+    }
+}
 
-export async function startGitinspectorScan(repo_id :number, branch :string="main", extensions :string[], since :string|null, until :string|null) :Promise<void> {
-    await axios({
+export class ScanError extends Error {
+    constructor(message :string="") {
+        super(message);
+    }
+}
+
+export async function startGitinspectorScan(repo_id :number, branch :string="main", extensions :string[], since :string|null, until :string|null) :Promise<string> {
+    return ( await axios({
         method: "post",
         url: `/api/stats/gitinspector/${encodeURIComponent(repo_id)}/${encodeURIComponent(branch)}`,
         data: {
@@ -10,17 +21,22 @@ export async function startGitinspectorScan(repo_id :number, branch :string="mai
             since: since,
             until: until
         }
-    });
+    }) ).data.id;
 }
 
-export async function getGitinspectorScan(repo_id :number, branch :string="main", extensions :string[], since :string|null, until :string|null) :Promise<string> {
-    return ( await axios({
+export async function getGitinspectorScan(scan_id :string) :Promise<string> {
+    const res = await axios({
         method: "get",
-        url: `/api/stats/gitinspector/${encodeURIComponent(repo_id)}/${encodeURIComponent(branch)}`,
-        params: {
-            extensions: extensions,
-            since: since,
-            until: until
-        }
-    }) ).data;
+        url: `/api/stats/gitinspector/${encodeURIComponent(scan_id)}`
+    });
+
+    switch (res.status) {
+        case 200:
+            return res.data;
+        case 202:
+        case 404:
+            throw new ScanNotCompleted();
+    }
+
+    throw new ScanError();
 }
