@@ -1,25 +1,32 @@
 <template>
 
     <div class="flex">
-        <div class="w-56 h-screen">
+        <div class="w-56 h-screen mr-3">
             <RepositoriesList :onRepoSelected="repoSelected" />
         </div>
 
-        <div class="flex-1 h-screen" v-if="selected_repo_id">
+        <div class="flex-1 h-screen">
 
             <div class="flex flex-col h-full">
-                <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
-                    <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" data-tabs-toggle="#dashboard-content" role="tablist">
-                        <li class="mr-2" role="presentation">
-                            <button class="inline-block p-4 border-b-2 rounded-t-lg" id="gitinspector-tab" data-tabs-target="#gitinspector-content" 
-                                    type="button" role="tab" aria-controls="gitinspector-content" aria-selected="false">Gitinspector</button>
-                        </li>
-                    </ul>
+                <div class="flex justify-between mb-4 border-b border-gray-200 dark:border-gray-700">
+                    <div>
+                        <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" data-tabs-toggle="#dashboard-content" role="tablist" v-if="selected_repo_id">
+                            <li class="mr-2" role="presentation">
+                                <button class="inline-block p-4 border-b-2 rounded-t-lg" id="gitinspector-tab" data-tabs-target="#gitinspector-content" 
+                                type="button" role="tab" aria-controls="gitinspector-content" aria-selected="false">Gitinspector</button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="flex items-center mr-3">
+                        <ThemeSwitch />
+                        <LocaleSwitch />
+                    </div>
                 </div>
     
-                <div id="dashboard-content" class="flex-1 h-full">
+                <div id="dashboard-content" class="flex-1 h-full" v-if="selected_repo_id">
                     <div class="hidden h-full" id="gitinspector-content" role="tabpanel" aria-labelledby="gitinspector-tab">
-                        <GitInspector :repo_id="selected_repo_id" />
+                        <GitInspector :key="selected_repo_id" :repo_id="selected_repo_id" />
                     </div>
                 </div>
             </div>
@@ -35,6 +42,8 @@
     import { ref, Ref, onUpdated } from "vue";
     import RepositoriesList from "@/components/RepositoriesList.vue";
     import GitInspector from "@/components/GitInspector.vue";
+    import ThemeSwitch from "@/components/ThemeSwitch.vue";
+    import LocaleSwitch from "@/components/LocaleSwitch.vue";
     import { initFlowbite } from "flowbite";
 
     const selected_repo_id :Ref<number|null> = ref(null);

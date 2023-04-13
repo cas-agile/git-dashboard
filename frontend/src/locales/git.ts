@@ -9,7 +9,11 @@ export default {
         "deselect all": "Deselect all",
         
         "start date": "Start date",
-        "end date": "End date"
+        "end date": "End date",
+        
+        "export": "Export",
+
+        "gitinspector error": "An error occurred"
     },
     "it": {
         "select branch": "Seleziona branch",
@@ -21,6 +25,10 @@ export default {
         "deselect all": "Deseleziona tutto",
         
         "start date": "Data inizio",
-        "end date": "Data fine"
+        "end date": "Data fine",
+        
+        "export": "Esporta",
+
+        "gitinspector error": "Si è verificato un errore"
     }
 }

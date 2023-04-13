@@ -38,6 +38,10 @@ router.get("/gitlab/callback",
         failureRedirect: "/login/fail",
     })
 );
+
+router.get("/auth", (req, res) => {
+    res.sendStatus(req.user?.access ? 200 : 403);
+});
     
 router.get("/logout", (req, res) => {
     req.logout();

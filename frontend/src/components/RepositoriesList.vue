@@ -1,6 +1,8 @@
 <template>
     <div class="h-full w-full overflow-auto" id="container-repo">
-        <button :key="repo.id" v-for="repo in repositories" class="border rounded w-full mb-2" :onclick="() => props.onRepoSelected(repo.id)">
+        <button :key="repo.id" v-for="repo in repositories" :onclick="() => repoSelected(repo.id)"
+                :class="`border-b last:border-0 border-gray-500 dark:border-gray-200 w-full hover:bg-blue-300 dark:hover:bg-blue-700
+                        ${selected_repo === repo.id ? 'bg-blue-300 dark:bg-blue-700' : ''}`">
             <div class="py-4 px-2 text-left">
                 <p class="truncate font-bold">{{ repo.name }}</p>
                 <p class="truncate text-sm font-mono">{{ repo.path_with_namespace }}</p>
@@ -20,6 +22,7 @@
     import Spinner from "./Spinner.vue";
 
     const repositories = ref([] as GitlabRepository[]);
+    const selected_repo = ref(-1);
     let currently_fetching = ref(false);
     let current_page = 1;
     let last_page = false;
@@ -58,6 +61,14 @@
         currently_fetching.value = false;
 
         return repos;
+    }
+
+    function repoSelected(repo_id :number) {
+        selected_repo.value = repo_id;
+
+        if (props.onRepoSelected) {
+            props.onRepoSelected(repo_id);
+        }
     }
 
 </script>
