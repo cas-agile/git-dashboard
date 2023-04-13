@@ -1,6 +1,7 @@
 const exec = require("child_process").exec;
 const fs = require("fs").promises;
-const { cloneRepository, getLastCommitHash } = require("../utilities/gitlabAPI");
+const path = require("path");
+const { cloneRepository, getLastCommitHash, getProjectById } = require("../utilities/gitlabAPI");
 const { validateDate } = require("../validators/date");
 
 const GitinspectorModel = require("../models/gitinspector");
@@ -59,7 +60,7 @@ async function runGitinspector(req, repo_id, branch="main", extensions=[], since
             branch: branch,
             last_commit: commit_hash,
             extensions: parseExtensionParams(extensions),
-            gitinspector_scan: gitinspector,  // TODO Replace directory uuid to real repo name
+            gitinspector_scan: gitinspector.replace(new RegExp(`${path.basename(repo_path)}`, "g"), (await getProjectById(req, repo_id)).path_with_namespace),  // TODO Replace directory uuid to real repo name
             since: since,
             until: until
         }).save();
