@@ -16,7 +16,7 @@ export interface GitlabBranch {
 export async function listRepositories(page_number:number=1) : Promise<GitlabRepository[]> {
     return ( await axios({
         method: "get",
-        url: "/api/git/repositories",
+        url: `${import.meta.env.BASE_URL}/api/git/repositories`,
         params: {
             page_number: page_number
         }
@@ -26,13 +26,13 @@ export async function listRepositories(page_number:number=1) : Promise<GitlabRep
 export async function listBranches(repo_id :number) : Promise<GitlabBranch[]> {
     return ( await axios({
         method: "get",
-        url: `/api/git/repositories/${encodeURIComponent(repo_id)}/branches`,
+        url: `${import.meta.env.BASE_URL}/api/git/repositories/${encodeURIComponent(repo_id)}/branches`,
     }) ).data;
 }
 
 export async function listExtensions(repo_id :number, branch :string) : Promise<string[]> {
     return ( await axios({
         method: "get",
-        url: `/api/git/repositories/${encodeURIComponent(repo_id)}/${encodeURIComponent(branch)}/extensions/`,
+        url: `${import.meta.env.BASE_URL}/api/git/repositories/${encodeURIComponent(repo_id)}/${encodeURIComponent(branch)}/extensions/`,
     }) ).data;
 }

@@ -5,7 +5,7 @@ import LoginFail from "@/views/login/Fail.vue";
 import { isLogged } from "@/utilities/api/auth";
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
             path: "/",

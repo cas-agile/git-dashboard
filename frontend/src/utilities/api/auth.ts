@@ -4,7 +4,7 @@ export async function isLogged() : Promise<boolean> {
     try {
         await axios({
             method: "get",
-            url: `/api/auth`,
+            url: `${import.meta.env.BASE_URL}/api/auth`,
         });
 
         return true;

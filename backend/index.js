@@ -5,8 +5,12 @@ const path = require("path");
 const passport = require("passport");
 const session = require("express-session");
 var fs = require("fs");
+var url = require("url");
 const mongoose = require("mongoose");
 const { GitinspectorStatusModel } = require("./models/gitinspector-status");
+
+process.env.BASEPATH = url.parse(process.env.PUBLIC_URL).pathname;
+
 
 const gitlab_sso_router = require("./routes/gitlab_sso");
 const git_router = require("./routes/git");
@@ -22,12 +26,12 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/api", gitlab_sso_router);
-app.use("/api", git_router);
-app.use("/api", gitinspector_router);
+app.use(`${process.env.BASEPATH}/api`, gitlab_sso_router);
+app.use(`${process.env.BASEPATH}/api`, git_router);
+app.use(`${process.env.BASEPATH}/api`, gitinspector_router);
 
-app.use("/", express.static(path.join(__dirname, "../frontend/dist")));
-app.use("/*", (req, res) => { res.sendFile(path.join(__dirname, "../frontend/dist/index.html")) });
+app.use(`${process.env.BASEPATH}/`, express.static(path.join(__dirname, "../frontend/dist")));
+app.use(`${process.env.BASEPATH}/*`, (req, res) => { res.sendFile(path.join(__dirname, "../frontend/dist/index.html")) });
 
 
 if (!fs.existsSync(process.env.TMP_DIR)){ fs.mkdirSync(process.env.TMP_DIR); }

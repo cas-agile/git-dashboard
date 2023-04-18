@@ -34,8 +34,8 @@ router.get("/gitlab", passport.authenticate("gitlab", { scope: ["api"] }));
 
 router.get("/gitlab/callback",
     passport.authenticate("gitlab", {
-        successRedirect: "/",
-        failureRedirect: "/login/fail",
+        successRedirect: `${process.env.BASEPATH}/`,
+        failureRedirect: `${process.env.BASEPATH}/login/fail`,
     })
 );
 
