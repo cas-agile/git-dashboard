@@ -1,0 +1,47 @@
+version: "3.5"
+
+services:
+  dashboard:
+    container_name: cas-git-dashboard
+    hostname: git-dashboard
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PUBLIC_URL: "https://example.org"
+    depends_on:
+      - mongo
+    ports:
+      - 5000:8080
+    volumes:
+      - "/cas-dashboard/node_modules"
+    environment:
+      PORT: 8080
+      MONGO_URL: "mongodb://root:root@git-dashboard-db/git-dashboard?authSource=admin"
+      GITLAB_URL: "https://my-gitlab.org"
+      GITLAB_SSO_CLIENT: "GITLAB_CLIENT"
+      GITLAB_SSO_SECRET: "GITLAB_SECRET"
+      TMP_DIR: "/tmp"
+    networks:
+      - mynetwork
+
+  mongo:
+    image: mongo:4.4.19
+    container_name: cas-git-dashboard-db
+    hostname: git-dashboard-db
+    restart: unless-stopped
+    expose:
+      - "27017"
+    environment:
+      MONGO_INITDB_DATABASE: "git-dashboard"
+      MONGO_INITDB_ROOT_USERNAME: "root"
+      MONGO_INITDB_ROOT_PASSWORD: "root"
+    volumes:
+      - ./mongo-data:/data/db
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    name: mynetwork
