@@ -23,6 +23,9 @@ services:
       GITLAB_SSO_CLIENT: "GITLAB_CLIENT"
       GITLAB_SSO_SECRET: "GITLAB_SECRET"
       TMP_DIR: "/tmp"
+      VIDEO_DIR: "./videos"
+      GITINSPECTOR_CACHE_LIFE: "30d"
+      GOURCE_CACHE_LIFE: "30d"
     networks:
       - mynetwork
 

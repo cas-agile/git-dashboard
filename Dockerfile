@@ -28,6 +28,16 @@ RUN ln -s /usr/lib/node18.16.0/bin/node /usr/bin/node
 RUN ln -s /usr/lib/node18.16.0/bin/npm /usr/bin/npm
 RUN ln -s /usr/lib/node18.16.0/bin/npx /usr/bin/npx
 
+# Gource
+WORKDIR /tmp
+RUN apt-get install -y ffmpeg
+RUN apt-get install -y build-essential xvfb libsdl2-dev libsdl2-image-dev libpcre3-dev libfreetype6-dev libglew-dev libglm-dev libboost-filesystem-dev libpng-dev libsdl1.2-dev libsdl-image1.2-dev libtinyxml-dev
+RUN wget https://github.com/acaudwell/Gource/releases/download/gource-0.54/gource-0.54.tar.gz
+RUN tar -xf gource-0.54.tar.gz
+WORKDIR /tmp/gource-0.54
+RUN ./configure
+RUN make
+RUN make install
 
 WORKDIR /git-dashboard
 
