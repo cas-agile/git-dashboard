@@ -3,6 +3,7 @@ const fs = require("fs").promises;
 const path = require("path");
 const { cloneRepository, getLastCommitHash, getProjectById } = require("./gitlabAPI");
 const crypto = require("crypto");
+const ms = require("ms");
 
 const GourceModel = require("../models/gource");
 const { JobStatusModel, JOB_STATUSES } = require("../models/job-status");
@@ -65,11 +66,31 @@ async function getGource(job_id) {
     const gource_result = await GourceModel.findOne({
         job_id: job_id
     });
+
+    if (gource_result) {
+        gource_result.last_access = Date.now();
+        await gource_result.save();
+    }
     
     return gource_result?.video_path;
 }
 
+async function cleanOldGource() {
+    const threshold = Date.now() - ms(process.env.GOURCE_CACHE_LIFE);
+
+    const to_delete = await GourceModel.find({
+        last_access: { "$lt": threshold }
+    });
+
+    await Promise.all( to_delete.map(gource => fs.rm(gource.video_path)) );
+
+    await GourceModel.deleteMany({
+        last_access: { "$lt": threshold }
+    });
+}
+
 module.exports = {
     runGource,
-    getGource
+    getGource,
+    cleanOldGource
 }

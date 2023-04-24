@@ -4,6 +4,7 @@ const path = require("path");
 const { cloneRepository, getLastCommitHash, getProjectById } = require("../utilities/gitlabAPI");
 const { validateDate } = require("../validators/date");
 const crypto = require("crypto");
+const ms = require("ms");
 
 const GitinspectorModel = require("../models/gitinspector");
 const { JobStatusModel, JOB_STATUSES } = require("../models/job-status");
@@ -83,11 +84,25 @@ async function getGitinspector(job_id) {
     const gitinspector_result = await GitinspectorModel.findOne({
         job_id: job_id
     });
+
+    if (gitinspector_result) {
+        gitinspector_result.last_access = Date.now();
+        await gitinspector_result.save();
+    }
     
     return gitinspector_result?.gitinspector_scan;
 }
 
+async function cleanOldGitinspector() {
+    const threshold = Date.now() - ms(process.env.GITINSPECTOR_CACHE_LIFE);
+
+    await GitinspectorModel.deleteMany({
+        last_access: { "$lt": threshold }
+    });
+}
+
 module.exports = {
     runGitinspector,
-    getGitinspector
+    getGitinspector,
+    cleanOldGitinspector
 }

@@ -6,7 +6,9 @@ const gourceSchema = mongoose.Schema({
     branch: { type: String, required: true },
     last_commit: { type: String, required: true },
 
-    video_path: { type: String, required: true }
+    video_path: { type: String, required: true },
+
+    last_access: { type: Number, required: true, default: () => Date.now() }
 });
 
 /**

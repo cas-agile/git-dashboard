@@ -8,6 +8,9 @@ var fs = require("fs");
 var url = require("url");
 const mongoose = require("mongoose");
 const { JobStatusModel } = require("./models/job-status");
+const cron = require('node-cron');
+const { cleanOldGitinspector } = require("./utilities/gitinspector")
+const { cleanOldGource } = require("./utilities/gource")
 
 process.env.BASEPATH = url.parse(process.env.PUBLIC_URL).pathname;
 
@@ -42,9 +45,16 @@ if (!fs.existsSync(process.env.VIDEO_DIR)){ fs.mkdirSync(process.env.VIDEO_DIR);
 async function main() {
     await mongoose.connect(process.env.MONGO_URL);
     await JobStatusModel.collection.drop();
+    await cleanOldGitinspector();
+    await cleanOldGource();
 
     app.listen(process.env.PORT, () => {
         console.log(`Listening at ${process.env.PUBLIC_URL}`);
+    });
+
+    cron.schedule("0 3 * * 0", () => {
+        cleanOldGitinspector();
+        cleanOldGource();
     });
 }
 

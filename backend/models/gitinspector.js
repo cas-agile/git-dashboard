@@ -9,7 +9,9 @@ const gitinspectorSchema = mongoose.Schema({
     since: String,
     until: String,
 
-    gitinspector_scan: { type: String, required: true }
+    gitinspector_scan: { type: String, required: true },
+
+    last_access: { type: Number, required: true, default: () => Date.now() }
 });
 
 /**
