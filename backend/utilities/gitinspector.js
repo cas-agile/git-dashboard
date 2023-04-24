@@ -76,7 +76,7 @@ async function runGitinspector(req, repo_id, branch="main", extensions=[], since
 
 /**
  * Retrieve gitinspector scan of a repository from cache
- * @param {string} job_id         Identified of the scan request
+ * @param {string} job_id         Identifier of the scan request
  * @returns {Promise<string|null>} Gitinspector scan if in cache. null otherwise
  */
 async function getGitinspector(job_id) {
