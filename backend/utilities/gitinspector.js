@@ -30,7 +30,7 @@ async function runGitinspector(req, repo_id, branch="main", extensions=[], since
     const commit_hash = await getLastCommitHash(repo_path);
     if (since && !validateDate(since)) { since = null; }
     if (until && !validateDate(until)) { until = null; }
-    const job_id = crypto.createHash("sha1").update(JSON.stringify(["gitinspector", repo_id, branch, extensions, since, until])).digest("hex");
+    const job_id = crypto.createHash("sha1").update(JSON.stringify(["gitinspector", repo_id, commit_hash, branch, extensions, since, until])).digest("hex");
 
     // Scan already done or currently running
     if (await GitinspectorModel.hasScan(job_id) || (await JobStatusModel.getStatus(job_id)) === JOB_STATUSES.RUNNING) {
