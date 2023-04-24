@@ -136,11 +136,11 @@
         
         loading.value = true;
 
-        const scan_id = await startGitinspectorScan(repo_id, branch, selected_extensions.value, start_date, end_date);
+        const job_id = await startGitinspectorScan(repo_id, branch, selected_extensions.value, start_date, end_date);
 
         for (let i=0; i<60; i++) {
             try {
-                gitinspector.value = await getGitinspectorScan(scan_id);
+                gitinspector.value = await getGitinspectorScan(job_id);
                 break;
             }
             catch (err) {

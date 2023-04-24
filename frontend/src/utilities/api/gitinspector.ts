@@ -24,10 +24,10 @@ export async function startGitinspectorScan(repo_id :number, branch :string="mai
     }) ).data.id;
 }
 
-export async function getGitinspectorScan(scan_id :string) :Promise<string> {
+export async function getGitinspectorScan(job_id :string) :Promise<string> {
     const res = await axios({
         method: "get",
-        url: `${import.meta.env.BASE_URL}/api/stats/gitinspector/${encodeURIComponent(scan_id)}`
+        url: `${import.meta.env.BASE_URL}/api/stats/gitinspector/${encodeURIComponent(job_id)}`
     });
 
     switch (res.status) {

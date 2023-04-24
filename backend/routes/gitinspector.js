@@ -7,7 +7,7 @@ const controller = require("../controllers/gitinspector");
 /**
  * Gets gitinspector results on a repo
  * Params:
- *  scan_id : string   Identifier of the request
+ *  job_id : string   Identifier of the request
  * 
  * Response
  *  200: Scan completed
@@ -16,7 +16,7 @@ const controller = require("../controllers/gitinspector");
  *  404: Scan not found (maybe the starting request is missing)
  *  500: Internal server error
  */
-router.get("/stats/gitinspector/:scan_id", middleware.getGitinspectorOnRepo, controller.getGitinspectorOnRepo);
+router.get("/stats/gitinspector/:job_id", middleware.getGitinspectorOnRepo, controller.getGitinspectorOnRepo);
 
 
 /**

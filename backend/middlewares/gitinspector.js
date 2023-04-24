@@ -3,7 +3,7 @@ const gitinspector_validator = require("../validators/gitinspector");
 const date_validator = require("../validators/date");
 
 async function getGitinspectorOnRepo(req, res, next) {
-    if ( !req.params.scan_id ) { return res.status(400).json({ message: "Missing parameter" }); }
+    if ( !req.params.job_id ) { return res.status(400).json({ message: "Missing parameter" }); }
     return next();
 }
 

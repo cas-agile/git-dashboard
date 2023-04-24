@@ -7,7 +7,7 @@ const session = require("express-session");
 var fs = require("fs");
 var url = require("url");
 const mongoose = require("mongoose");
-const { GitinspectorStatusModel } = require("./models/gitinspector-status");
+const { JobStatusModel } = require("./models/job-status");
 
 process.env.BASEPATH = url.parse(process.env.PUBLIC_URL).pathname;
 
@@ -38,7 +38,7 @@ if (!fs.existsSync(process.env.TMP_DIR)){ fs.mkdirSync(process.env.TMP_DIR); }
 
 async function main() {
     await mongoose.connect(process.env.MONGO_URL);
-    await GitinspectorStatusModel.collection.drop();
+    await JobStatusModel.collection.drop();
 
     app.listen(process.env.PORT, () => {
         console.log(`Listening at ${process.env.PUBLIC_URL}`);

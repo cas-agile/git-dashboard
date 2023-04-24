@@ -1,12 +1,12 @@
 require("dotenv").config();
 const { runGitinspector, getGitinspector } = require("../utilities/gitinspector");
-const { GitinspectorStatusModel, GI_STATUSES } = require("../models/gitinspector-status");
+const { JobStatusModel, JOB_STATUSES } = require("../models/job-status");
 
 
 async function startGitinspectorOnRepo(req, res) {
     try {
-        const scan_id = await runGitinspector(req, req.params.repo_id, req.params.branch, req.body.extensions, req.body.since, req.body.until);
-        return res.status(202).json({ id: scan_id });
+        const job_id = await runGitinspector(req, req.params.repo_id, req.params.branch, req.body.extensions, req.body.since, req.body.until);
+        return res.status(202).json({ id: job_id });
     }
     catch (err) {
         console.error(err);
@@ -16,11 +16,11 @@ async function startGitinspectorOnRepo(req, res) {
 
 async function getGitinspectorOnRepo(req, res) {
     try {
-        const scan_status = await GitinspectorStatusModel.getStatus(req.params.scan_id);
-        if (scan_status === GI_STATUSES.SCANNING) { return res.sendStatus(202); }
-        if (scan_status === GI_STATUSES.ERROR) { return res.sendStatus(500); }
+        const scan_status = await JobStatusModel.getStatus(req.params.job_id);
+        if (scan_status === JOB_STATUSES.RUNNING) { return res.sendStatus(202); }
+        if (scan_status === JOB_STATUSES.ERROR) { return res.sendStatus(500); }
 
-        const gitinspector = await getGitinspector(req.params.scan_id);
+        const gitinspector = await getGitinspector(req.params.job_id);
         if (!gitinspector) { return res.sendStatus(404); }
         return res.status(200).send(gitinspector);
     }
