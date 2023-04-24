@@ -13,7 +13,10 @@ export default {
         
         "export": "Export",
 
-        "gitinspector error": "An error occurred"
+        "gitinspector error": "An error occurred",
+
+        "generate": "Generate",
+        "gource loading": "It may take some time. The request will still be processed."
     },
     "it": {
         "select branch": "Seleziona branch",
@@ -29,6 +32,9 @@ export default {
         
         "export": "Esporta",
 
-        "gitinspector error": "Si è verificato un errore"
+        "gitinspector error": "Si è verificato un errore",
+
+        "generate": "Genera",
+        "gource loading": "Potrebbe richiedere tanto tempo. La richiesta sarà comunque elaborata."
     }
 }
