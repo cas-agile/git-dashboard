@@ -33,7 +33,7 @@ async function runGource(req, repo_id, branch="main") {
         status: JOB_STATUSES.RUNNING
     }).save();
 
-    exec(`xvfb-run gource -1280x720 -o - | ffmpeg -y -r 30 -f image2pipe -vcodec ppm -i - -pix_fmt yuv420p ${path.join(process.env.VIDEO_DIR, job_id+".mp4")}`, { cwd: repo_path }, 
+    exec(`xvfb-run gource -1280x720 -o - | ffmpeg -y -r 120 -f image2pipe -vcodec ppm -i - -pix_fmt yuv420p ${path.join(process.env.VIDEO_DIR, job_id+".mp4")}`, { cwd: repo_path }, 
     async (error, stdout, stderr) => {
         if (error) {
             await JobStatusModel.updateOne({ job_id: job_id }, { status: JOB_STATUSES.ERROR });
