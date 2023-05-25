@@ -21,6 +21,19 @@
                     </div>
                 </div>
 
+                <div class="h-full flex items-end [&>*]:mr-2">
+                    <div v-if="video_url" class="h-full">
+                        <a :href="video_url" download
+                                class="font-medium rounded-lg px-5 py-2.5 h-full focus:ring-4 focus:outline-none block
+                                        text-white bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 disabled:bg-blue-700/40 
+                                        dark:text-white dark:bg-blue-600  dark:hover:bg-blue-700 dark:focus:ring-blue-800 dark:disabled:bg-blue-600/40">
+                            <div class="h-full flex items-center">
+                                {{ t("export") }}
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
             </div>
         </div>
 
